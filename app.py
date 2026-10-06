@@ -107,7 +107,10 @@ def health():
         version = subprocess.run([SOFFICE, '--version'], capture_output=True, timeout=30).stdout.decode().strip()
     except (OSError, subprocess.SubprocessError):
         version = ''
-    return {'status': 'ok' if version else 'degraded', 'libreoffice': version, 'fonts': len(_fonts())}
+    status = 'ok' if version else 'degraded'
+    if not TOKEN:
+        status = 'token missing: set DOCSERVICE_TOKEN in the stack environment variables'
+    return {'status': status, 'libreoffice': version, 'fonts': len(_fonts())}
 
 
 def _fonts():
