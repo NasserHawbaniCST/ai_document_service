@@ -51,7 +51,7 @@
    | المتغير | القيمة |
    |---|---|
    | `DOCSERVICE_TOKEN` | توكن طويل عشوائي (إجباري). على أي جهاز لينكس: `openssl rand -hex 32` |
-   | `DOCSERVICE_PORT` | المنفذ على السيرفر. الافتراضي 8000 |
+   | `DOCSERVICE_PORT` | المنفذ على السيرفر. الافتراضي 8686 (المنفذ 8000 يستخدمه Portainer) |
    | `FONTS_DIR` | مجلد الخطوط على السيرفر. الافتراضي `/opt/cs-docservice/fonts` |
 
 4. (اختياري) **GitOps updates**: فعّلها حتى يعيد Portainer النشر تلقائياً عند أي تحديث في الريبو.
@@ -60,7 +60,7 @@
 ### 4. التحقق
 
 - في Portainer افتح **Containers** ثم `cs-docservice`، وتحقق أن الحالة **healthy**.
-- افتح `http://<IP-السيرفر>:8000/health`. يجب أن يظهر:
+- افتح `http://<IP-السيرفر>:8686/health`. يجب أن يظهر:
   `{"status":"ok","libreoffice":"LibreOffice 7.4...","fonts":...}`
 
 ### 5. الأمان
@@ -68,7 +68,7 @@
 - **الأفضل:** ضع الخدمة خلف HTTPS عبر Nginx Proxy Manager أو Traefik، مثلاً `https://docs.example.com` يوجّه إلى `cs-docservice:8000`. بعدها احذف `ports` من ملف الـ compose، أو اجعل المنفذ داخلياً.
 - **أو على الأقل:** اسمح بالمنفذ لعنوان سيرفر Odoo فقط:
   ```bash
-  ufw allow from <IP-ODOO> to any port 8000
+  ufw allow from <IP-ODOO> to any port 8686
   ```
 - كل الطلبات تحتاج التوكن، ما عدا `/health`.
 
@@ -78,7 +78,7 @@
 
 | الإعداد | القيمة |
 |---|---|
-| Document service URL | `https://docs.example.com` أو `http://IP:8000` |
+| Document service URL | `https://docs.example.com` أو `http://IP:8686` |
 | Document service token | نفس قيمة `DOCSERVICE_TOKEN` |
 | Images & scanned files | مزوّد يدعم الصور، مثل Qwen VL أو Claude |
 

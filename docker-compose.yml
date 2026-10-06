@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     ports:
       # Behind a reverse proxy (Nginx Proxy Manager, Traefik...) or open to the Odoo server IP only
-      - "${DOCSERVICE_PORT:-8000}:8000"
+      - "${DOCSERVICE_PORT:-8686}:8000"
     environment:
       # Empty: the stack still deploys, but every request is refused until the token is set
       DOCSERVICE_TOKEN: ${DOCSERVICE_TOKEN:-}
