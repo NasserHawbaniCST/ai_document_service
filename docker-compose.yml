@@ -1,0 +1,22 @@
+# Portainer: Stacks > Add stack > Repository, compose path "docker-compose.yml".
+# Set the environment variables of the stack in Portainer (DOCSERVICE_TOKEN is required).
+services:
+  docservice:
+    build: .
+    image: cs-document-service:latest
+    container_name: cs-docservice
+    restart: unless-stopped
+    ports:
+      # Behind a reverse proxy (Nginx Proxy Manager, Traefik...) or open to the Odoo server IP only
+      - "${DOCSERVICE_PORT:-8000}:8000"
+    environment:
+      DOCSERVICE_TOKEN: ${DOCSERVICE_TOKEN:?Set DOCSERVICE_TOKEN in the stack environment variables}
+      DOCSERVICE_MAX_MB: ${DOCSERVICE_MAX_MB:-30}
+      DOCSERVICE_TIMEOUT: ${DOCSERVICE_TIMEOUT:-180}
+      DOCSERVICE_WORKERS: ${DOCSERVICE_WORKERS:-2}
+    volumes:
+      # Extra fonts on the host: copy .ttf/.otf files there and restart the stack (no rebuild needed)
+      - ${FONTS_DIR:-/opt/cs-docservice/fonts}:/usr/local/share/fonts/host:ro
+    tmpfs:
+      - /tmp
+    mem_limit: 3g
